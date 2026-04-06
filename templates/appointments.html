@@ -1,0 +1,121 @@
+{% extends "_base.html" %}
+
+{% block title %}Appointments — Meditrack{% endblock title %}
+
+{% block content %}
+<h1 class="page-title">Appointments</h1>
+<div class="btn-group">
+    <button class="btn-primary" onclick="showSection('form-section')">Save Appointment</button>
+    <button class="btn-secondary" onclick="showSection('record-section')">View Records</button>
+</div>
+
+<form class="form-card" method="post" action="">
+
+    {% csrf_token %}
+        {{ form.non_field_errors }}
+    {% for field in form %}
+      <p>  {{ field.label }} : {{error}} </p>
+    {% endfor %}
+    <div class="form-group">
+        <label for="patient_name">Patient name</label>
+      {{form.patient_name}}
+    </div>
+    <div class="form-group">
+        
+        <label for="doctor_name">Doctor name</label>
+        {{form.doctor_name}}
+
+    </div>
+    <div class="form-group">
+        <label for="appointment_date">Date of appointment</label>
+        {{form.date}}
+    </div>
+    <div class="form-group">
+        <label for="appointment_time">Time of appointment</label>
+        {{form.time}}
+    </div>
+    <div class="form-group">
+        <label for="appointment_status">Status of appointment</label>
+        {{form.status}}
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Save appointment</button>
+    </div>
+</form>
+
+<div id="record-section" style="display:none;">
+
+    <!-- Show dropdown only if no patient selected yet -->
+    {% if not selected_patient %}
+    <form method="GET" action="{% url 'records' %}" class="form-card">
+        <div class="form-group">
+            <label for="patient_name">Select Patient</label>
+            <select name="patient_name" id="patient_name">
+                <option value="">-- Select Patient --</option>
+                {% for p in patients %}
+                    <option value="{{ p.patient_name }}">{{ p.patient_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-primary">Search</button>
+    </form>
+    {% endif %}
+
+    <!-- Show records after patient is selected -->
+    {% if selected_patient %}
+    <div class="table-card">
+        <h2>Records for: {{ selected_patient }}</h2>
+        <p>Total Appointments: <strong>{{ total }}</strong></p>
+
+        <a href="{% url 'patient_records' %}" class="btn-secondary">← Back</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.doctor_name }}</td>
+                    <td>{{ r.date }}</td>
+                    <td>{{ r.time }}</td>
+                    <td>{{ r.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- JavaScript to toggle sections -->
+<script>
+    function showSection(sectionId) {
+        // hide all sections
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('record-section').style.display = 'none';
+
+        // show the clicked one
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    // If a patient was selected, auto-show records section
+    {% if selected_patient %}
+        showSection('record-section');
+    {% endif %}
+</script>
+
+
+
+
+
+
+
+
+{% endblock content %}

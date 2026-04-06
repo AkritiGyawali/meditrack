@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+
+{% block title %}Medications — Meditrack{% endblock title %}
+
+{% block content %}
+<h1 class="page-title">Medications</h1>
+<form class="form-card" method="post" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="med_user_name">User name</label>
+        {{form.dashboard}}
+    </div>
+    <div class="form-group">
+        <label for="med_doctor_name">Doctor name</label>
+        {{form.doctor}}
+    </div>
+    <div class="form-group">
+        <label for="dosage">Dosage</label>
+        <input type="text" id="dosage" name="dosage" placeholder="e.g. 500 mg twice daily" required>
+    </div>
+    <div class="form-group">
+        <label for="start_date">Start date</label>
+        <input type="date" id="start_date" name="start_date" required>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Save medication</button>
+    </div>
+</form>
+{% endblock content %}

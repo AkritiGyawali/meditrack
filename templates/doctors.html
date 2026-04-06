@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block title %}Doctors — Meditrack{% endblock title %}
+
+{% block content %}
+<h1 class="page-title">Doctors</h1>
+<form class="form-card" method="post" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="doctor_name">Doctor name</label>
+        <input type="text" id="doctor_name" name="doctor_name" required>
+    </div>
+    <div class="form-group">
+        <label for="specialization">Specialization</label>
+        <input type="text" id="specialization" name="specialization" placeholder="e.g. Cardiology">
+    </div>
+    <div class="form-group">
+        <label for="availability">Availability</label>
+        <input type="text" id="availability" name="availability" placeholder="e.g. Mon–Fri 9:00–17:00">
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Save doctor</button>
+    </div>
+</form>
+
+{% if doctors %}
+<section class="table-card">
+    <table>
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in doctors %}
+                <tr>
+                    <td>{{ d.doctor_name }}</td>
+                    <td>{{ d.specialization }}</td>
+                    <td>{{ d.availability }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meditrack{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/meditrack.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav-main" aria-label="Main navigation">
+            <span class="nav-brand">meditrack</span>
+            <div class="nav-left">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="nav-link" href="{% url 'appointments' %}">Appointment</a>
+                <a class="nav-link" href="{% url 'doctors' %}">Doctor</a>
+            </div>
+            
+            <div class="nav-right">
+                <a class="nav-link" href="{% url 'medications' %}">Medication</a>
+                <a class="nav-link" href="{% url 'records' %}">Records</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+        {% block content %}
+        {% endblock content %}
+    </main>
+</body>
+</html>
