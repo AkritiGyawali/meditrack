@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% comment %} {% extends "_base.html" %}
 
 {% block title %}Medications — Meditrack{% endblock title %}
 
@@ -26,4 +27,199 @@
         <button type="submit" class="btn-primary">Save medication</button>
     </div>
 </form>
-{% endblock content %}
+{% endblock content %} {% endcomment %}
+
+
+
+{% block title %}Medications — Meditrack{% endblock %}
+{% block content %}
+<h1 class="page-title">Medications</h1>
+
+{% for message in messages %}
+<div class="alert {{ message.tags }}">{{ message }}</div>
+{% endfor %}
+
+<div id="form-section">
+<form class="form-card" method="post">
+    {% csrf_token %}
+    <div class="btn-group">
+    
+    <button type="button" class="btn-secondary" onclick="showSection('record-section')">View Patient Records</button>
+</div>
+    {% if form.errors %}
+        <div class="error-box">{{ form.errors }}</div>
+    {% endif %}
+
+    <div class="form-group">
+        {{ form.patient_name.label_tag }}
+        {{ form.patient_name }}
+    </div>
+    <div class="form-group">
+        {{ form.medication_name.label_tag }}
+        {{ form.medication_name }}
+    </div>
+    <div class="form-group">
+        {{ form.dosage.label_tag }}
+        {{ form.dosage }}
+    </div>
+    <div class="form-group">
+        {{ form.frequency.label_tag }}
+        {{ form.frequency }}
+    </div>
+    <div class="form-group">
+        {{ form.start_date.label_tag }}
+        {{ form.start_date }}
+    </div>
+    <div class="form-group">
+        {{ form.end_date.label_tag }}
+        {{ form.end_date }}
+    </div>
+    <button type="submit" class="btn-primary">Save Medication</button>
+</form>
+</div>
+
+{% if medications %}
+<div id='list-section'>
+<section class="table-card">
+    <table>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Medication</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in medications %}
+            <tr>
+                <td>{{ m.patient_name }}</td>
+                <td>{{ m.medication_name }}</td>
+                <td>{{ m.dosage }}</td>
+                <td>{{ m.frequency }}</td>
+                <td>{{ m.start_date }}</td>
+                <td>{{ m.end_date }}</td>
+                <td>
+                    <a href="{% url 'medication_edit' m.pk %}">Edit</a>
+                    <a href="{% url 'medication_delete' m.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+</div>
+{% endif %}
+
+
+<!-- patient records history -->
+<div id="record-section" style="display:none;">
+    {% if not selected_patient %}
+    <form method="GET" action="{% url 'medication_records'%}"class="form-card">
+        <div class="form-group">
+            <label for="patient_name">Select Patient</label>
+            <select name="patient_name"id='patient_name'>
+                <option value=''>--select patient--</option>
+                {% for p in patients %}
+                    <option value="{{p.id}}">{{p.patient_name}}</option>
+                    {% endfor %}
+            </select>
+
+        </div>
+        <button type="submit" class="btn-primary">Search</button>
+    </form>
+    {% endif %}
+
+
+    {% if selected_patient%}
+    <div class='table-card'>
+        <h2>Records for: {{selected_patient.patient_name}}</h2>
+        <p>Total Medications: <strong>{{ total }}</strong></p>
+        <a href="{% url 'medication_records' %}" class="btn-secondary">← Back</a>
+
+        <table class='table'>
+             <thead>
+                <tr>
+                    <th>Medication</th>
+                    <th>Dosage</th>
+                    <th>Frequency</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.medication_name }}</td>
+                    <td>{{ r.dosage }}</td>
+                    <td>{{ r.frequency }}</td>
+                    <td>{{ r.start_date }}</td>
+                    <td>{{ r.end_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+{% comment %} {% if medications %}
+<section class='table-card'>
+    <form method='GET' class='filter-form'>
+        <select name='doctor'>
+            <option value=''>All Doctors</option>
+            {% for d in doctors %}
+                <option value='{{d.id}}' {% if request.GET.doctor|stringformat:"s" == d.id %}selected{% endif %}>
+                    {{d.doctor_name}}
+                </option>
+            {% endfor %}
+        </select>
+        <input type="date" name="date" value="{{ request.GET.date }}">
+        <button type='submit' class='btn-primary'>Filter</button>
+    </form>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in medications %}
+            <tr>
+                <td>{{ a.patient_name }}</td>
+                <td>{{ a.doctor_name }}</td>
+                <td>{{ a.date }}</td>
+                <td>{{ a.time }}</td>
+                <td>{{ a.status }}</td>
+                <td>
+                    <a href="{% url 'medication_edit' a.pk %}">Edit</a>
+                    <a href="{% url 'medication_delete' a.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %} {% endcomment %}
+<script>
+    function showSection(sectionId) {
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('record-section').style.display = 'none';
+        document.getElementById('list-section').style.display = 'none';
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    {% if selected_patient %}
+        showSection('record-section');
+    {% endif %}
+</script>
+
+{% endblock %}

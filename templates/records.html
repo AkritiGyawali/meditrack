@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% comment %} {% extends "_base.html" %}
 
 {% block title %}Records — Meditrack{% endblock title %}
 
@@ -57,4 +58,186 @@
         </table>
 </section>
 {% endif %}                                                                                                                                      
-{% endblock content %}
+{% endblock content %} {% endcomment %}
+
+{% block title %}Records — Meditrack{% endblock %}
+{% block content %}
+<h1 class="page-title">Patient Records</h1>
+
+{% for message in messages %}
+<div class="alert {{ message.tags }}">{{ message }}</div>
+{% endfor %}
+<div class="btn-group">
+
+    <button class="btn-secondary" onclick="showSection('record-section')">View Patient Records</button>
+</div>
+<div id='form-class'>
+<form class="form-card" method="post">
+    {% csrf_token %}
+
+    {% if form.errors %}
+        <div class="error-box">{{ form.errors }}</div>
+    {% endif %}
+    <div class="form-group">
+        {{ form.patient_name.label_tag }}
+        {{ form.patient_name }}
+    </div>
+    <div class="form-group">
+        {{ form.age.label_tag }}
+        {{ form.age }}
+    </div>
+    <div class="form-group">
+        {{ form.gender.label_tag }}
+        {{ form.gender }}
+    </div>
+    <div class="form-group">
+        {{ form.contact.label_tag }}
+        {{ form.contact }}
+    </div>
+    <div class="form-group">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+    </div>
+    <div class="form-group">
+        {{ form.blood_group.label_tag }}
+        {{ form.blood_group }}
+    </div>
+    <button type="submit" class="btn-primary">Save Record</button>
+</form>
+</div>
+
+{% if records %}
+<div id='list-section'>
+<section class="table-card">
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Name</th><th>Age</th><th>Gender</th>
+                <th>Contact</th><th>Blood Group</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr>
+                <td>{{ r.patient_name }}</td>
+                <td>{{ r.age }}</td>
+                <td>{{ r.gender }}</td>
+                <td>{{ r.contact }}</td>
+                <td>{{ r.blood_group }}</td>
+                <td>
+                    <a href="{% url 'records_edit' r.pk %}">Edit</a>
+                    <a href="{% url 'records_delete' r.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+</div>
+
+<div id='record-section' style='display:none;'>
+
+    {% if not selected_patient %}
+    <form method='GET' action={% url 'records_of_patient' %} class='form-card'>
+        <div class='form-card'>
+            <label for='patient_name'>Select Patient</label>
+            <select name='patient_name' id='patient_name'>
+                <option value=''>-- Select Patient --</option>
+                {% for p in patients %}
+                    <option value='{{p}}'>{{p}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type='submit' class='btn-primary'>Search</button>
+    </form>
+    {% endif %}
+
+    {% if selected_patient %}
+    <div class='table-card'>
+        <h2> Records for: {{selected_patient}}</h2>
+            <p>Total Records: <strong>{{total}}</strong></p>
+            <a href="{% url 'records_of_patient' %}"class='btn-secondary'>← Back</a>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Doctor</th><th>Diagnosis</th><th>Prescription</th><th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in records %}
+                    <tr>
+                        <td>{{ r.doctor_name }}</td>
+                        <td>{{ r.diagnosis }}</td>
+                        <td>{{ r.prescription }}</td>
+                        <td>{{ r.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    {% endif %}
+
+    {% comment %} {% if records %}
+    <section-class='table-records'>
+        <form method="GET" class="filter-form">
+        <select name="doctor">
+        <option value=''>All Doctors</option>
+        {% for d in doctors %}
+                <option value='{{d.id}}' {% if request.GET.doctor|stringformat:"s" == d.id|stringformat:"s" %}selected{% endif %}>
+                    {{d.doctor_name}}
+                </option>
+            {% endfor %}
+        </select>
+        <select name='status'>
+            {% for value,label in status_choices %}
+            <option value='{{value}}' {% if request.GET.status == value %}selected{% endif %}>
+                {{label}}
+            </option>
+            {% endfor %}
+        </select>
+
+        <input type='data' name='data' value='{{request.GET.data}}'>
+        <button type='submit' class='btn-primary'>Filter</button>
+    </form> {% endcomment %}
+
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in appointments %}
+            <tr>
+                <td>{{ a.patient_name }}</td>
+                <td>{{ a.doctor_name }}</td>
+                <td>{{ a.date }}</td>
+                <td>{{ a.time }}</td>
+                <td>{{ a.status }}</td>
+                <td>
+                    <a href="{% url 'records_edit' a.pk %}">Edit</a>
+                    <a href="{% url 'records_delete' a.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+<script>
+    function showSection(sectionId) {
+        document.getElementById('form-class').style.display = 'none';
+        document.getElementById('record-section').style.display = 'none';
+        document.getElementById('list-section').style.display = 'none';
+        document.getElementById(sectionId).style.display = 'block';
+    }
+</script>
+
+{% endblock %}

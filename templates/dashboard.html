@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-
+{% comment %}
 {% block title %}Dashboard — Meditrack{% endblock title %}
 
 {% block content %}
@@ -23,3 +23,47 @@
     </div>
 </form>
 {% endblock content %}
+{% endcomment %}
+{% block title %}Dashboard — Meditrack{% endblock %}
+{% block content %}
+<h1 class="page-title">Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h2>{{ total_doctors }}</h2>
+        <p>Total Doctors</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ total_patients }}</h2>
+        <p>Total Patients</p>
+    </div>
+    <div class="stat-card">
+        <h2>{{ appointments_today }}</h2>
+        <p>Appointments Today</p>
+    </div>
+</div>
+
+{% comment %} <section class="table-card">
+    <h2>Upcoming Appointments</h2>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in upcoming %}
+            <tr>
+                <td>{{ a.patient_name }}</td>
+                <td>{{ a.doctor_name }}</td>
+                <td>{{ a.date }}</td>
+                <td>{{ a.time }}</td>
+                <td>{{ a.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section> {% endcomment %}
+
+
+{% endblock %}

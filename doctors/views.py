@@ -12,13 +12,16 @@
 
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView , UpdateView, DeleteView
 
 from .forms import Doctorform
-from .models import doctor
+from .models import Doctor
+from records.models import Record
+from rest_framework import viewsets
+from .serializers import DoctorSerializer
 
 class DoctorCreateView(CreateView):
-    model = doctor
+    model = Doctor
     form_class = Doctorform
     template_name = "doctors.html"
     success_url = reverse_lazy("doctors")
@@ -33,10 +36,35 @@ class DoctorCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["doctors"] = doctor.objects.all()
+        context["doctors"] = Doctor.objects.all()
         return context
 
 class DoctorListView(ListView):
-    model = doctor
+    model = Doctor
     template_name = "doctors_list.html"
     context_object_name = "doctors"
+
+class DoctorUpdateView(UpdateView):
+    model = Doctor
+    form_class = Doctorform
+    template_name = 'doctors_edit.html'
+    success_url = reverse_lazy('doctors')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Doctor updated successfully.")
+        return super().form_valid(form)
+
+class DoctorDeleteView(DeleteView):
+    model = Doctor
+    template_name = 'doctors_confirm_delete.html'
+    success_url = reverse_lazy('doctors')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Doctor deleted successfully.")
+        return super().delete(request, *args, **kwargs)
+
+# DRF
+class DoctorViewSet(viewsets.ModelViewSet):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    

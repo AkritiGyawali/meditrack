@@ -1,5 +1,8 @@
 from django.urls import path
-from . import views
+from . views import MedicationCreateView, MedicationUpdateView, MedicationDeleteView,patient_records
 urlpatterns=[
-   path ('/api/medications',views.medication,name='medications')
+   path ('medications/',MedicationCreateView.as_view(),name='medications'),
+   path('medications/<int:pk>/edit/',MedicationUpdateView.as_view(),name='medication_edit'),
+   path('medications/<int:pk>/delete/',MedicationDeleteView.as_view(),name='medication_delete'),
+   path('medications/records/',patient_records,name='medication_records'),
 ]

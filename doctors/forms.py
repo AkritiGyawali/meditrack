@@ -1,8 +1,8 @@
 from django import forms
-from .models import doctor
+from .models import Doctor
 
 
 class Doctorform(forms.ModelForm):
     class Meta:
-        model= doctor
+        model= Doctor
         fields=['doctor_name','specialization','availability']

@@ -1,0 +1,24 @@
+After the completion of crud
+
+Adding REST API
+What does adding rest api do in the project?
+user give request server return request and user view in the web page.
+In a basic crud sever provide the html tamplate meanwhile adding rest api server return json data and frontent decide how that data will appear in the webpage.
+Irrespective of frontend user can make request to server and then server will return json data and then frontend will decide how data can appear in the webpage.
+Adding Rest api is considered to be more efficient that just the crud.
+
+step to add  rest api
+1. creating serializers.py for each app
+2. Creating ModelViewSet classes for each model.for now I will keep read and write permission to all the app. 
+    Generic view set mw get ko lagi createAPIView ani delete ko lagi DeleteAPIView garnu paryo
+    with modelviewset we donot need to make separate classes for get,post,delete , put,patch
+3. Register all viewsets in the projects router. 
+    This mean router ley automatically url provide garxa
+    for eg:
+    from rest_framework.routers import DefaultRouter
+    router = DefaultRouter()
+    router.register(   // this mean hey router please create all APIURL for PatientViewSet
+    'patients',//It just the name that appear in url as api/patients/1   It doesn't need to match the model name but for convention we match it with model name
+    PatientViewSet
+     )   
+     urlpatterns = router.urls                                                                                                                     

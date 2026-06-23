@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'doctors',
     'medications',
     'records',
+    
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +91,15 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

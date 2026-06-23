@@ -1,7 +1,7 @@
 from django import forms
-from .models import dashboard
+from .models import Dashboard
 
 class dashboardform(forms.ModelForm):
     class Meta:
-        model = dashboard
+        model = Dashboard
         fields = ['user_name','user_address','user_phone']

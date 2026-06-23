@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+{% block title %}Delete Doctor — Meditrack{% endblock %}
+{% block content %}
+<h1 class="page-title">Delete Doctor</h1>
+<div class="form-card">
+    <p>Are you sure you want to delete <strong>{{ object.doctor_name }}</strong>?</p>
+    <p>This will also delete all appointments linked to this doctor.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary">Yes, Delete</button>
+        <a href="{% url 'doctors' %}" class="btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

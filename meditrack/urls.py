@@ -16,12 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from rest_framework.routers import DefaultRouter
+
+from doctors.views import DoctorViewSet
+from appointments.views import AppointmentViewSet
+from medications.views import MedicationViewSet
+from records.views import RecordViewSet
+
+router = DefaultRouter()
+router.register(r'doctors', DoctorViewSet)
+router.register(r'appointments', AppointmentViewSet)
+router.register(r'medications', MedicationViewSet)
+router.register(r'records', RecordViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("dashboard.urls")),
-    path('doctors/',include('doctors.urls')),
-    path('appointments/',include('appointments.urls')),
-    path('medications/',include('medications.urls')),
-    path('records/',include('records.urls')),
+    path('',include('doctors.urls')),
+    path('',include('appointments.urls')),
+    path('',include('medications.urls')),
+    path('',include('records.urls')),
+    path('api/',include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')),
 ]
