@@ -3,7 +3,7 @@ from .api_view import DoctorViewSet
 
 router = DefaultRouter()
 router.register(
-    'Doctor',
+    'doctor',
     DoctorViewSet
 )
 

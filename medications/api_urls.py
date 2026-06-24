@@ -4,7 +4,7 @@ from .api_view import MedicationViewSet
 router = DefaultRouter()
 
 router.register(
-    'Medication',
+    'medication',
     MedicationViewSet
 )
 

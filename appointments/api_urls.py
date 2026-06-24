@@ -3,7 +3,7 @@ from .api_view import AppointmentViewSet
 
 router = DefaultRouter()
 router.register(
-    'Appointment',
+    'appointment',
     AppointmentViewSet
 )
 urlpatterns = router.urls

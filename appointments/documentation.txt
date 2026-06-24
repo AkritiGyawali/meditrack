@@ -21,4 +21,9 @@ step to add  rest api
     'patients',//It just the name that appear in url as api/patients/1   It doesn't need to match the model name but for convention we match it with model name
     PatientViewSet
      )   
-     urlpatterns = router.urls                                                                                                                     
+     urlpatterns = router.urls  
+
+
+Adding permission
+Like who can read,create , delete and update 
+Adding filtering,search,ordering and pagination                                                                                                                

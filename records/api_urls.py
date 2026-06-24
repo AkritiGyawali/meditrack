@@ -4,6 +4,8 @@ from .api_view import RecordViewSet
 router = DefaultRouter()
 
 router.register(
-    'Record',
+    'record',
     RecordViewSet
 )
+
+urlpatterns = router.urls
