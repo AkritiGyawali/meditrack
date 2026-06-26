@@ -26,4 +26,13 @@ step to add  rest api
 
 Adding permission
 Like who can read,create , delete and update 
-Adding filtering,search,ordering and pagination                                                                                                                
+Adding filtering,search,ordering and pagination    
+
+#Adding jwt(JSON Web Token)
+Step to add jwt
+a. install the package
+    pip install djangorestframework-simplejwt
+b. updating setting.py-adding jwt authentication to the api auth class
+c. adding token endpoints to your project urls
+    . api/token/ for getting a token
+    . api/token/refresh for renewing access token
