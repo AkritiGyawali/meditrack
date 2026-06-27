@@ -5,6 +5,8 @@ from .models import Doctor
 from .serializers import DoctorSerializer
 from .permissions import IsAdminForDelete
 
+
+from meditrack.pagination import SmallPagination
 class DoctorViewSet(ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
@@ -14,3 +16,4 @@ class DoctorViewSet(ModelViewSet):
     ordering_fields = ['doctor_name', 'id']
     ordering = ['doctor_name']
     
+    pagination_class = SmallPagination

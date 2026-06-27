@@ -36,3 +36,98 @@ b. updating setting.py-adding jwt authentication to the api auth class
 c. adding token endpoints to your project urls
     . api/token/ for getting a token
     . api/token/refresh for renewing access token
+
+
+Note: suppose ram is a doctor then does he need to get the access of all the patient?
+        No ram (doctor) should get the access of only his patient .Therefore permission alone is not enough
+        Permission along with filter is needed.
+
+Moving secret_key and database settings to .env and created .gitignore file and place .env file into it.
+
+Added throttling so one client cannot spam the API.
+        Throttling limits how many request a client can make in a given time window.DRF has this built in no extra package needed.
+        
+        REST_FRAMEWORK = {
+    # ... your existing settings ...
+
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',   # unauthenticated users
+        'rest_framework.throttling.UserRateThrottle',   # authenticated users
+    ],
+
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '20/hour',    # strangers get 20 requests per hour
+        'user': '100/day',    # logged-in users get 100 per day
+    },
+    }
+
+
+Adding CORS support if you want react or mobile apps later.
+        installing CORS
+        pip install django-cors-header
+        
+        adding 'corsheaders' to install app in setting.py
+
+        adding to middleware Like
+        MIDDLEWARE = [
+            'corsheaders.middleware.CorsMiddleware',   # ← must be first (or very top) crosmiddleware needs to run before DJANGO generates a response, otherwise the cors headers never get added.
+            'django.middleware.common.CommonMiddleware',
+            'django.middleware.security.SecurityMiddleware',
+                    ...
+                    ]
+        
+        CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'accept',
+    'origin',
+    'x-requested-with',
+]
+THe above will be the final picture of setting.py with cors headers.
+
+
+In urls.py, adding API documentation routes.
+    adding swagger/openapi 
+    adding a versioned api prefix
+    this will make the project look much more professional and easier to consume.
+step for this:
+    install drf-spectacular:pip install drf-spectacular
+    added 'drf-spectacular' to installed app
+    configuring to the setting.py
+    REST_FRAMEWORK = {
+    # ... your existing settings ...
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',  # ← add this
+}
+# Swagger UI customization
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'MediTrack API',
+    'DESCRIPTION': 'API for managing medical records, doctors, appointments, and medications.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,   # hides the raw /schema/ route from the UI
+}
+update urls.py
+# meditrack/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
+)
+urlpatterns = [
+    # Admin
+    path('admin/', admin.site.urls),
+    # Versioned API routes
+    path('api/v1/', include('api.urls')),
+    # API Schema (raw OpenAPI JSON/YAML — needed by the UIs below)
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Swagger UI  →  http://127.0.0.1:8000/api/docs/
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # ReDoc UI   →  http://127.0.0.1:8000/api/redoc/
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]
