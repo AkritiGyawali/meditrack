@@ -3,7 +3,7 @@ After the completion of crud
 Adding REST API
 What does adding rest api do in the project?
 user give request server return request and user view in the web page.
-In a basic crud sever provide the html tamplate meanwhile adding rest api server return json data and frontent decide how that data will appear in the webpage.
+In a basic crud sever provide the html template meanwhile adding rest api server return json data and frontent decide how that data will appear in the webpage.
 Irrespective of frontend user can make request to server and then server will return json data and then frontend will decide how data can appear in the webpage.
 Adding Rest api is considered to be more efficient that just the crud.
 
